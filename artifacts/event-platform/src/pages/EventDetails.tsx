@@ -73,9 +73,15 @@ export default function EventDetails() {
       <div className="grid lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2 space-y-8">
           <div className="w-full h-64 md:h-96 rounded-3xl overflow-hidden relative shadow-lg">
-            {/* abstract placeholder banner */}
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-500/20 glass" />
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200&auto=format&fit=crop&q=60')] opacity-50 mix-blend-overlay bg-cover bg-center" />
+            {event.imageUrl ? (
+              <img src={event.imageUrl} alt={event.title} className="w-full h-full max-h-80 object-cover rounded-2xl" />
+            ) : (
+              <>
+                {/* abstract placeholder banner */}
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-500/20 glass" />
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200&auto=format&fit=crop&q=60')] opacity-50 mix-blend-overlay bg-cover bg-center" />
+              </>
+            )}
           </div>
 
           <div>

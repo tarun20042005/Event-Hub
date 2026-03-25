@@ -13,6 +13,7 @@ const createEventSchema = z.object({
   time: z.string().min(1),
   location: z.string().min(1),
   price: z.coerce.number().min(0),
+  imageUrl: z.string().nullable().optional(),
 });
 
 /**
@@ -31,6 +32,7 @@ async function formatEvent(event: typeof eventsTable.$inferSelect, organizerName
     time: event.time,
     location: event.location,
     price: parseFloat(event.price),
+    imageUrl: event.imageUrl ?? null,
     organizerId: event.organizerId,
     organizerName,
   };
@@ -139,7 +141,7 @@ router.post("/", async (req: Request, res: Response) => {
     return;
   }
 
-  const { title, description, date, time, location, price } = parsed.data;
+  const { title, description, date, time, location, price, imageUrl } = parsed.data;
 
   const [event] = await db.insert(eventsTable).values({
     title,
@@ -148,6 +150,7 @@ router.post("/", async (req: Request, res: Response) => {
     time,
     location,
     price: price.toString(),
+    imageUrl: imageUrl ?? null,
     organizerId: userId,
   }).returning();
 
@@ -193,10 +196,10 @@ router.put("/:eventId", async (req: Request, res: Response) => {
     return;
   }
 
-  const { title, description, date, time, location, price } = parsed.data;
+  const { title, description, date, time, location, price, imageUrl } = parsed.data;
 
   const [updated] = await db.update(eventsTable)
-    .set({ title, description, date, time, location, price: price.toString() })
+    .set({ title, description, date, time, location, price: price.toString(), imageUrl: imageUrl ?? null })
     .where(eq(eventsTable.id, eventId))
     .returning();
 

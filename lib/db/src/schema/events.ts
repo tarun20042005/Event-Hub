@@ -11,6 +11,7 @@ export const eventsTable = pgTable("events", {
   time: text("time").notNull(),
   location: text("location").notNull(),
   price: numeric("price", { precision: 10, scale: 2 }).notNull(),
+  imageUrl: text("image_url"),
   organizerId: integer("organizer_id").notNull().references(() => usersTable.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

@@ -2,7 +2,7 @@ import { Router, type IRouter, type Request, type Response } from "express";
 import QRCode from "qrcode";
 import { db } from "@workspace/db";
 import { bookingsTable, eventsTable, usersTable } from "@workspace/db";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 const router: IRouter = Router();
@@ -40,10 +40,59 @@ async function formatBooking(booking: typeof bookingsTable.$inferSelect) {
       time: event.time,
       location: event.location,
       price: parseFloat(event.price),
+      imageUrl: event.imageUrl ?? null,
       organizerId: event.organizerId,
       organizerName: organizer?.name ?? "Unknown",
     } : null,
   };
+}
+
+/**
+ * Build QR code content with full event + attendee details and payment note
+ */
+function buildQrContent(params: {
+  bookingId: number;
+  paymentStatus: string;
+  eventTitle: string;
+  eventDate: string;
+  eventTime: string;
+  eventLocation: string;
+  pricePerTicket: number;
+  userName: string;
+  userEmail: string;
+  ticketCount: number;
+  totalPrice: number;
+}) {
+  const {
+    bookingId, paymentStatus, eventTitle, eventDate, eventTime,
+    eventLocation, pricePerTicket, userName, userEmail, ticketCount, totalPrice,
+  } = params;
+
+  return [
+    "=== EVENTFLOW TICKET ===",
+    "",
+    `Booking ID: #${bookingId}`,
+    `Status: ${paymentStatus}`,
+    "",
+    "--- EVENT DETAILS ---",
+    `Event: ${eventTitle}`,
+    `Date: ${eventDate}`,
+    `Time: ${eventTime}`,
+    `Venue: ${eventLocation}`,
+    `Price Per Ticket: Rs.${pricePerTicket}`,
+    "",
+    "--- ATTENDEE DETAILS ---",
+    `Name: ${userName}`,
+    `Email: ${userEmail}`,
+    `Tickets: ${ticketCount}`,
+    `Total Amount: Rs.${totalPrice}`,
+    "",
+    "--- IMPORTANT NOTE ---",
+    `Please pay Rs.${totalPrice} at the event venue`,
+    "counter using this QR code and collect",
+    "your physical ticket.",
+    "======================",
+  ].join("\n");
 }
 
 /**
@@ -65,7 +114,7 @@ router.get("/", async (req: Request, res: Response) => {
 /**
  * POST /api/bookings
  * Create a new booking for an event (attendee only)
- * Generates QR code with booking ID and payment status
+ * Generates QR code with full event + attendee details and payment note
  */
 router.post("/", async (req: Request, res: Response) => {
   const userId = (req.session as any).userId;
@@ -94,6 +143,7 @@ router.post("/", async (req: Request, res: Response) => {
     return;
   }
 
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId)).limit(1);
   const totalPrice = parseFloat(event.price) * ticketCount;
 
   // Insert booking with a placeholder QR code initially
@@ -106,16 +156,26 @@ router.post("/", async (req: Request, res: Response) => {
     qrCodeData: "placeholder",
   }).returning();
 
-  // Generate QR code with booking details
-  const qrContent = JSON.stringify({
+  // Generate detailed QR code with event + attendee + payment note
+  const qrText = buildQrContent({
     bookingId: booking.id,
     paymentStatus: "Pending",
-    event: event.title,
-    tickets: ticketCount,
-    totalPrice: `₹${totalPrice}`,
+    eventTitle: event.title,
+    eventDate: event.date,
+    eventTime: event.time,
+    eventLocation: event.location,
+    pricePerTicket: parseFloat(event.price),
+    userName: user?.name ?? "Unknown",
+    userEmail: user?.email ?? "Unknown",
+    ticketCount,
+    totalPrice,
   });
 
-  const qrCodeDataUrl = await QRCode.toDataURL(qrContent, { width: 300, margin: 2 });
+  const qrCodeDataUrl = await QRCode.toDataURL(qrText, {
+    width: 400,
+    margin: 2,
+    errorCorrectionLevel: "M",
+  });
 
   // Update with the real QR code
   const [updated] = await db.update(bookingsTable)
@@ -151,7 +211,6 @@ router.get("/:bookingId", async (req: Request, res: Response) => {
     return;
   }
 
-  // Attendees can only see their own bookings; organizers can see bookings for their events
   if (role === "attendee" && booking.userId !== userId) {
     res.status(403).json({ error: "Access denied" });
     return;
@@ -171,6 +230,7 @@ router.get("/:bookingId", async (req: Request, res: Response) => {
 /**
  * POST /api/bookings/:bookingId/scan
  * Simulate QR scan: mark booking payment as Paid (organizer only)
+ * Regenerates QR code with updated Paid status
  */
 router.post("/:bookingId/scan", async (req: Request, res: Response) => {
   const userId = (req.session as any).userId;
@@ -202,22 +262,35 @@ router.post("/:bookingId/scan", async (req: Request, res: Response) => {
     return;
   }
 
-  // Verify organizer owns the event
   const [event] = await db.select().from(eventsTable).where(eq(eventsTable.id, booking.eventId)).limit(1);
   if (!event || event.organizerId !== userId) {
     res.status(403).json({ error: "You can only scan bookings for your own events" });
     return;
   }
 
-  // Update QR code with paid status
-  const qrContent = JSON.stringify({
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, booking.userId)).limit(1);
+  const totalPrice = parseFloat(booking.totalPrice);
+
+  // Regenerate QR code with updated Paid status
+  const qrText = buildQrContent({
     bookingId: booking.id,
     paymentStatus: "Paid",
-    event: event.title,
-    tickets: booking.ticketCount,
-    totalPrice: `₹${booking.totalPrice}`,
+    eventTitle: event.title,
+    eventDate: event.date,
+    eventTime: event.time,
+    eventLocation: event.location,
+    pricePerTicket: parseFloat(event.price),
+    userName: user?.name ?? "Unknown",
+    userEmail: user?.email ?? "Unknown",
+    ticketCount: booking.ticketCount,
+    totalPrice,
   });
-  const newQrCode = await QRCode.toDataURL(qrContent, { width: 300, margin: 2 });
+
+  const newQrCode = await QRCode.toDataURL(qrText, {
+    width: 400,
+    margin: 2,
+    errorCorrectionLevel: "M",
+  });
 
   const [updated] = await db.update(bookingsTable)
     .set({ paymentStatus: "Paid", qrCodeData: newQrCode })

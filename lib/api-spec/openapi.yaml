@@ -575,6 +575,9 @@ components:
           type: integer
         organizerName:
           type: string
+        imageUrl:
+          type: string
+          nullable: true
       required:
         - id
         - title
@@ -602,6 +605,9 @@ components:
         price:
           type: number
           minimum: 0
+        imageUrl:
+          type: string
+          nullable: true
       required:
         - title
         - description

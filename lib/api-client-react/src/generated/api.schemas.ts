@@ -77,6 +77,7 @@ export interface Event {
   price: number;
   organizerId: number;
   organizerName: string;
+  imageUrl?: string | null;
 }
 
 export interface CreateEventRequest {
@@ -87,6 +88,7 @@ export interface CreateEventRequest {
   location: string;
   /** @minimum 0 */
   price: number;
+  imageUrl?: string | null;
 }
 
 export type BookingPaymentStatus =

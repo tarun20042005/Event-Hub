@@ -59,21 +59,25 @@ export default function MyBookings() {
                 <div className="space-y-3 text-sm text-muted-foreground mb-6">
                   <div className="flex items-center">
                     <Calendar className="w-4 h-4 mr-3 text-primary shrink-0" />
-                    <span>{format(new Date(booking.event.date), 'MMM do, yyyy')} at {booking.event.time}</span>
+                    <span>{format(new Date(booking.event.date), 'MMM do, yyyy')}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Clock className="w-4 h-4 mr-3 text-primary shrink-0" />
+                    <span>{booking.event.time}</span>
                   </div>
                   <div className="flex items-start">
                     <MapPin className="w-4 h-4 mr-3 text-primary shrink-0 mt-0.5" />
                     <span className="line-clamp-2">{booking.event.location}</span>
                   </div>
+                  <div className="flex items-center">
+                    <Users className="w-4 h-4 mr-3 text-primary shrink-0" />
+                    <span>{booking.ticketCount} Ticket{booking.ticketCount > 1 ? 's' : ''}</span>
+                  </div>
                 </div>
 
                 <div className="bg-muted/50 rounded-xl p-4 flex justify-between items-center">
                   <div>
-                    <p className="text-xs text-muted-foreground">Tickets</p>
-                    <p className="font-bold text-lg">{booking.ticketCount}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-muted-foreground">Total</p>
+                    <p className="text-xs text-muted-foreground">Total Paid/Due</p>
                     <p className="font-bold text-lg text-primary">{formatCurrency(booking.totalPrice)}</p>
                   </div>
                 </div>
@@ -91,9 +95,11 @@ export default function MyBookings() {
                 <p className="text-xs font-mono text-muted-foreground mb-4">ID: #{booking.id.toString().padStart(6, '0')}</p>
                 
                 {booking.paymentStatus === 'Pending' && (
-                  <p className="text-xs text-center text-muted-foreground mt-auto bg-background/80 p-2 rounded-lg backdrop-blur-sm border border-border">
-                    Please pay at the venue using this QR code.
-                  </p>
+                  <div className="mt-auto bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg border border-amber-200 dark:border-amber-800">
+                    <p className="text-xs text-center text-amber-800 dark:text-amber-400 font-medium leading-relaxed">
+                      Please pay {formatCurrency(booking.totalPrice)} at the event venue counter using this QR code and collect your physical ticket.
+                    </p>
+                  </div>
                 )}
               </div>
               

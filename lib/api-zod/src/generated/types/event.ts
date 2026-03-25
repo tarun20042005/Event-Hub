@@ -16,4 +16,5 @@ export interface Event {
   price: number;
   organizerId: number;
   organizerName: string;
+  imageUrl?: string | null;
 }

@@ -62,6 +62,7 @@ router.get("/:eventId/bookings", async (req: Request, res: Response) => {
         time: event.time,
         location: event.location,
         price: parseFloat(event.price),
+        imageUrl: event.imageUrl ?? null,
         organizerId: event.organizerId,
         organizerName: organizer?.name ?? "Unknown",
       },

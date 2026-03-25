@@ -118,16 +118,25 @@ export default function Home() {
               <Link href={`/events/${event.id}`}>
                 <div className="group h-full glass-card hover:bg-card rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 border border-border/50 hover:border-primary/20 flex flex-col">
                   {/* Decorative placeholder image area */}
-                  <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden flex-shrink-0">
-                    {/* Abstract placeholder elements */}
-                    <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20">
-                      <Ticket className="w-24 h-24 transform -rotate-12" />
+                  {event.imageUrl ? (
+                    <div className="h-48 relative overflow-hidden flex-shrink-0">
+                      <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover rounded-t-xl" />
+                      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-primary shadow-sm">
+                        {event.price > 0 ? formatCurrency(event.price) : 'Free'}
+                      </div>
                     </div>
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-primary shadow-sm">
-                      {event.price > 0 ? formatCurrency(event.price) : 'Free'}
+                  ) : (
+                    <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden flex-shrink-0">
+                      {/* Abstract placeholder elements */}
+                      <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20">
+                        <Ticket className="w-24 h-24 transform -rotate-12" />
+                      </div>
+                      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-primary shadow-sm">
+                        {event.price > 0 ? formatCurrency(event.price) : 'Free'}
+                      </div>
                     </div>
-                  </div>
+                  )}
                   
                   <div className="p-6 flex flex-col flex-1">
                     <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2">

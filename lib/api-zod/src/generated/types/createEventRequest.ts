@@ -14,4 +14,5 @@ export interface CreateEventRequest {
   location: string;
   /** @minimum 0 */
   price: number;
+  imageUrl?: string | null;
 }

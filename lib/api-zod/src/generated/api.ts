@@ -83,6 +83,7 @@ export const ListEventsResponseItem = zod.object({
   price: zod.number(),
   organizerId: zod.number(),
   organizerName: zod.string(),
+  imageUrl: zod.string().nullish(),
 });
 export const ListEventsResponse = zod.array(ListEventsResponseItem);
 
@@ -98,6 +99,7 @@ export const CreateEventBody = zod.object({
   time: zod.string(),
   location: zod.string(),
   price: zod.number().min(createEventBodyPriceMin),
+  imageUrl: zod.string().nullish(),
 });
 
 /**
@@ -113,6 +115,7 @@ export const ListMyEventsResponseItem = zod.object({
   price: zod.number(),
   organizerId: zod.number(),
   organizerName: zod.string(),
+  imageUrl: zod.string().nullish(),
 });
 export const ListMyEventsResponse = zod.array(ListMyEventsResponseItem);
 
@@ -133,6 +136,7 @@ export const GetEventResponse = zod.object({
   price: zod.number(),
   organizerId: zod.number(),
   organizerName: zod.string(),
+  imageUrl: zod.string().nullish(),
 });
 
 /**
@@ -151,6 +155,7 @@ export const UpdateEventBody = zod.object({
   time: zod.string(),
   location: zod.string(),
   price: zod.number().min(updateEventBodyPriceMin),
+  imageUrl: zod.string().nullish(),
 });
 
 export const UpdateEventResponse = zod.object({
@@ -163,6 +168,7 @@ export const UpdateEventResponse = zod.object({
   price: zod.number(),
   organizerId: zod.number(),
   organizerName: zod.string(),
+  imageUrl: zod.string().nullish(),
 });
 
 /**
@@ -201,6 +207,7 @@ export const GetEventBookingsResponseItem = zod.object({
     price: zod.number(),
     organizerId: zod.number(),
     organizerName: zod.string(),
+    imageUrl: zod.string().nullish(),
   }),
   userName: zod.string(),
   userEmail: zod.string(),
@@ -228,6 +235,7 @@ export const ListMyBookingsResponseItem = zod.object({
     price: zod.number(),
     organizerId: zod.number(),
     organizerName: zod.string(),
+    imageUrl: zod.string().nullish(),
   }),
   userName: zod.string(),
   userEmail: zod.string(),
@@ -264,6 +272,7 @@ export const GetBookingResponse = zod.object({
     price: zod.number(),
     organizerId: zod.number(),
     organizerName: zod.string(),
+    imageUrl: zod.string().nullish(),
   }),
   userName: zod.string(),
   userEmail: zod.string(),
@@ -294,6 +303,7 @@ export const ScanBookingResponse = zod.object({
     price: zod.number(),
     organizerId: zod.number(),
     organizerName: zod.string(),
+    imageUrl: zod.string().nullish(),
   }),
   userName: zod.string(),
   userEmail: zod.string(),
