@@ -3,17 +3,23 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { formatCurrency } from "@/lib/utils";
-import { Ticket, MapPin, Calendar, Clock, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { Ticket, MapPin, Calendar, Clock, CheckCircle2, AlertCircle, Loader2, Users } from "lucide-react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 export default function MyBookings() {
   const [_, setLocation] = useLocation();
   const { data: user, isLoading: userLoading } = useGetCurrentUser({ query: { retry: false } });
   const { data: bookings, isLoading } = useListMyBookings();
 
+  useEffect(() => {
+    if (!userLoading && (!user || user.role !== "attendee")) {
+      setLocation("/");
+    }
+  }, [user, userLoading, setLocation]);
+
   if (!userLoading && (!user || user.role !== "attendee")) {
-    setLocation("/");
     return null;
   }
 

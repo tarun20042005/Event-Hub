@@ -6,7 +6,7 @@ import { Link, useLocation } from "wouter";
 import { format } from "date-fns";
 import { formatCurrency } from "@/lib/utils";
 import { Calendar, MapPin, Search, Ticket, Users, ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 export default function Home() {
@@ -21,9 +21,13 @@ export default function Home() {
     { query: { keepPreviousData: true } }
   );
 
-  // Redirect organizers to their dashboard
+  useEffect(() => {
+    if (!userLoading && user?.role === "organizer") {
+      setLocation("/organizer/dashboard");
+    }
+  }, [user, userLoading, setLocation]);
+
   if (!userLoading && user?.role === "organizer") {
-    setLocation("/organizer/dashboard");
     return null;
   }
 
