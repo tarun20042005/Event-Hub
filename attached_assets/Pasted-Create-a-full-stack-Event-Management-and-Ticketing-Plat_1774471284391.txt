@@ -1,0 +1,143 @@
+Create a full-stack Event Management and Ticketing Platform using Python.
+
+Tech Stack:
+
+* Backend: Python Flask (preferred) or Django
+* Frontend: HTML, CSS, JavaScript with Bootstrap
+* Database: SQLite (default) or PostgreSQL
+* ORM: SQLAlchemy
+* Authentication system
+
+Project Overview:
+The system should support two types of users:
+
+1. Attendee (User)
+2. Event Organizer
+
+Authentication Module:
+
+* Separate login and registration for:
+
+  * Attendees
+  * Organizers
+* Store role-based user data (role field: attendee / organizer)
+* Secure password hashing
+
+Attendee Features:
+
+* Register and login
+* View all available events
+* Search and filter events
+* Book tickets for events
+* Select number of tickets
+* After booking:
+
+  * Generate a QR code
+  * QR should contain booking ID and status "Payment Pending"
+* Show booking history
+* Display a note:
+  "Please pay at the event venue using this QR code and collect your physical ticket."
+
+Organizer Features:
+
+* Register and login as organizer
+* Create new events (title, description, date, time, location, price in INR)
+* Update and delete their own events
+* IMPORTANT:
+
+  * Organizers should ONLY see and manage events created by them
+* View bookings for their events
+* Scan QR code (simulate QR scanning)
+* After scanning:
+
+  * Show booking details
+  * Mark payment status as "Paid"
+  * Confirm ticket collection
+
+Event Module:
+
+* Event listing page (visible to attendees)
+* Event detail page
+* Display all prices in Indian Rupees (₹)
+
+Ticket Booking System:
+
+* Booking confirmation page
+* Generate QR code using Python library (like qrcode)
+* Store booking info:
+
+  * user_id
+  * event_id
+  * ticket_count
+  * total_price (in ₹)
+  * payment_status (Pending / Paid)
+
+Database Tables:
+
+1. Users:
+
+   * id
+   * name
+   * email
+   * password
+   * role (attendee / organizer)
+
+2. Events:
+
+   * id
+   * title
+   * description
+   * date
+   * time
+   * location
+   * price (INR)
+   * organizer_id
+
+3. Bookings:
+
+   * id
+   * user_id
+   * event_id
+   * ticket_count
+   * total_price
+   * payment_status
+   * qr_code_path
+
+Advanced Features:
+
+* QR Code generation for each booking
+* QR contains booking ID and payment status
+* Organizer QR scanner simulation page
+* Update payment status after scanning
+
+UI Requirements:
+
+* Clean responsive UI using Bootstrap
+* Navigation based on role:
+
+  * Attendee → Events, My Bookings
+  * Organizer → My Events, Create Event, Scan QR
+* Show INR symbol ₹ in all pricing
+
+Technical Requirements:
+
+* Use MVC structure
+* Separate files: routes, models, templates
+* Use Jinja2 templating
+* Proper validation and error handling
+* Comment all major functions
+
+Output Required:
+
+* Full working project code
+* Folder structure
+* Instructions to run in Replit
+* Sample data for testing
+* README content for documentation
+* Explanation of each module
+
+Ensure:
+
+* No errors in execution
+* Clean and readable code
+* Proper role-based access control

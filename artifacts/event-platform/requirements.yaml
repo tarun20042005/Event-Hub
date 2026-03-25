@@ -1,0 +1,21 @@
+packages:
+  "framer-motion": "For page transitions and premium UI animations"
+  "react-hook-form": "For robust form state management"
+  "@hookform/resolvers": "For Zod validation integration"
+  "date-fns": "For formatting event dates beautifully"
+  "clsx": "For conditional class names"
+  "tailwind-merge": "For merging tailwind classes safely"
+  "lucide-react": "For beautiful consistent icons"
+
+images:
+  - path: "artifacts/event-platform/public/images/hero-abstract.png"
+    description: "Modern abstract gradient mesh background in vibrant indigo, violet, and soft coral. Premium, clean, professional software aesthetic. Uncluttered."
+    aspect_ratio: "16:9"
+  - path: "artifacts/event-platform/public/images/logo.png"
+    description: "Minimalist geometric event ticket logo icon, vibrant indigo and coral colors, transparent background, flat vector style"
+    aspect_ratio: "1:1"
+
+notes:
+  - App assumes session-based authentication via cookies
+  - Role-based redirection is handled in the frontend routing layer
+  - API endpoints provided via @workspace/api-client-react hooks
