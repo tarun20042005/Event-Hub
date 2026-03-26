@@ -104,134 +104,82 @@ export default function TicketPage() {
           </Button>
         </div>
 
-        {/* Ticket Card - Professional Document Style */}
-        <div className="bg-white dark:bg-zinc-950 rounded-2xl shadow-2xl overflow-hidden border-4 border-primary/30 print:shadow-none print:border-primary/50">
-          {/* Header - Professional Document Style */}
-          <div className="bg-gradient-to-br from-primary via-primary to-accent p-10 md:p-12 text-white">
-            <div className="flex items-start justify-between gap-4 mb-6">
-              <div>
-                <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-2">Event Ticket</p>
-                <p className="text-white/80 text-sm mb-1">Booking Reference</p>
-                <p className="text-white text-3xl font-bold font-mono">#{booking.id.toString().padStart(6, '0')}</p>
-              </div>
-              <div className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm backdrop-blur-sm ${
-                booking.paymentStatus === 'Paid'
-                  ? 'bg-green-500/30 text-green-100 border border-green-400/50'
-                  : 'bg-amber-500/30 text-amber-100 border border-amber-400/50'
-              }`}>
-                {booking.paymentStatus === 'Paid' ? (
-                  <CheckCircle2 className="w-4 h-4" />
-                ) : (
-                  <AlertCircle className="w-4 h-4" />
-                )}
-                {booking.paymentStatus}
-              </div>
+        {/* Ticket Card - Clean & Simple */}
+        <div className="bg-white dark:bg-zinc-950 rounded-3xl shadow-2xl overflow-hidden border-4 border-green-500/40 print:shadow-none">
+          {/* Success Header */}
+          <div className="bg-gradient-to-r from-green-500 to-green-600 p-12 md:p-16 text-white text-center">
+            <div className="mb-4">
+              <CheckCircle2 className="w-16 h-16 mx-auto mb-4" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight">
-              {booking.event.title}
-            </h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-3">Registration Confirmed</h1>
+            <p className="text-white/90 text-lg">You're all set for the event!</p>
           </div>
 
           {/* Content */}
-          <div className="p-8 md:p-10">
-            {/* Event Details Section */}
-            <div className="mb-10">
-              <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-                <Ticket className="w-5 h-5 text-primary" /> Event Details
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-10 md:p-14">
+            {/* Booking Reference */}
+            <div className="text-center mb-12 pb-8 border-b-2 border-border">
+              <p className="text-muted-foreground text-sm mb-2">Your Booking Reference</p>
+              <p className="text-5xl font-bold font-mono text-primary">#{booking.id.toString().padStart(6, '0')}</p>
+            </div>
+
+            {/* Event Title */}
+            <h2 className="text-3xl font-bold mb-8 text-center">{booking.event.title}</h2>
+
+            {/* Essential Event Info */}
+            <div className="space-y-6 mb-12">
+              <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-xl">
+                <Calendar className="w-6 h-6 text-primary shrink-0" />
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Date</p>
-                  <p className="font-semibold flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-primary" />
-                    {format(new Date(booking.event.date), 'EEEE, MMMM do, yyyy')}
-                  </p>
+                  <p className="text-sm text-muted-foreground">Date</p>
+                  <p className="font-bold text-lg">{format(new Date(booking.event.date), 'EEEE, MMMM do, yyyy')}</p>
                 </div>
+              </div>
+
+              <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-xl">
+                <Clock className="w-6 h-6 text-primary shrink-0" />
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Time</p>
-                  <p className="font-semibold flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-primary" />
-                    {booking.event.time}
-                  </p>
+                  <p className="text-sm text-muted-foreground">Time</p>
+                  <p className="font-bold text-lg">{booking.event.time}</p>
                 </div>
-                <div className="md:col-span-2">
-                  <p className="text-sm text-muted-foreground mb-1">Venue</p>
-                  <p className="font-semibold flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-primary" />
-                    {booking.event.location}
-                  </p>
+              </div>
+
+              <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-xl">
+                <MapPin className="w-6 h-6 text-primary shrink-0" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Venue</p>
+                  <p className="font-bold text-lg">{booking.event.location}</p>
                 </div>
               </div>
             </div>
 
-            {/* Attendee Details Section */}
-            <div className="mb-10">
-              <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-                <User className="w-5 h-5 text-primary" /> Attendee Details
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Name</p>
-                  <p className="font-semibold">{booking.userName}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Email</p>
-                  <p className="font-semibold flex items-center gap-2">
-                    <Mail className="w-4 h-4 text-primary" />
-                    {booking.userEmail}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Tickets</p>
-                  <p className="font-semibold text-lg">{booking.ticketCount}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Organizer</p>
-                  <p className="font-semibold">{booking.event.organizerName}</p>
-                </div>
+            {/* Attendee Name */}
+            <div className="mb-12 text-center p-6 bg-primary/5 rounded-2xl border-2 border-primary/20">
+              <p className="text-sm text-muted-foreground mb-2">Registered Attendee</p>
+              <p className="text-3xl font-bold">{booking.userName}</p>
+              <p className="text-sm text-muted-foreground mt-2">{booking.userEmail}</p>
+            </div>
+
+            {/* Ticket Count */}
+            <div className="text-center mb-12">
+              <p className="text-muted-foreground text-sm mb-2">Tickets Registered</p>
+              <p className="text-5xl font-bold text-primary">{booking.ticketCount}</p>
+            </div>
+
+            {/* CTA Section */}
+            <div className="bg-gradient-to-r from-primary/10 to-accent/10 border-2 border-primary/30 rounded-2xl p-8 text-center">
+              <h3 className="font-bold text-xl mb-3">Show This at Event Entry</h3>
+              <p className="text-muted-foreground mb-4">
+                When you arrive at the event, show this ticket to venue staff to receive your physical ticket.
+              </p>
+              <div className="bg-white dark:bg-zinc-950 p-4 rounded-xl inline-block">
+                <p className="text-sm font-mono text-primary">Scan QR code or show this page</p>
               </div>
             </div>
 
-            {/* Price Summary */}
-            <div className="bg-muted/50 rounded-2xl p-6 mb-10">
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-muted-foreground">Price per ticket:</span>
-                <span className="font-semibold">{formatCurrency(booking.event.price)}</span>
-              </div>
-              <div className="flex justify-between items-center mb-4 pb-4 border-b border-border">
-                <span className="text-muted-foreground">Quantity:</span>
-                <span className="font-semibold">{booking.ticketCount}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-lg font-bold">Total Amount:</span>
-                <span className="text-2xl font-bold text-primary">{formatCurrency(booking.totalPrice)}</span>
-              </div>
-            </div>
-
-            {/* Important Note */}
-            {booking.paymentStatus === 'Pending' && (
-              <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-800 rounded-2xl p-6 mb-10">
-                <h3 className="font-bold text-amber-900 dark:text-amber-200 mb-2">Payment Instructions</h3>
-                <p className="text-amber-900 dark:text-amber-300 text-sm">
-                  Please bring this ticket to the event and pay <strong>{formatCurrency(booking.totalPrice)}</strong> at the venue counter. 
-                  Present this ticket (scan the QR code or show this page) to collect your physical ticket.
-                </p>
-              </div>
-            )}
-
-            {booking.paymentStatus === 'Paid' && (
-              <div className="bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-2xl p-6 mb-10">
-                <h3 className="font-bold text-green-900 dark:text-green-200 mb-2">Payment Confirmed</h3>
-                <p className="text-green-900 dark:text-green-300 text-sm">
-                  Your payment has been received. Please bring this ticket to the event to collect your physical ticket at the counter.
-                </p>
-              </div>
-            )}
-
-            {/* Footer Note */}
-            <div className="text-center text-sm text-muted-foreground pt-6 border-t border-border">
-              <p>Please keep this ticket safe and bring it to the event.</p>
-              <p className="mt-1">Booking ID: #{booking.id.toString().padStart(6, '0')}</p>
+            {/* Footer */}
+            <div className="text-center mt-12 pt-8 border-t border-border text-sm text-muted-foreground">
+              <p>Save or print this confirmation for event entry</p>
             </div>
           </div>
         </div>
