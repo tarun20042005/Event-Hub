@@ -172,7 +172,11 @@ router.post("/", async (req: Request, res: Response) => {
   });
 
   // Generate QR code that links to the ticket page
-  const ticketUrl = `/ticket/${booking.id}`;
+  // Build absolute URL from request to ensure it works when scanned
+  const protocol = req.get('x-forwarded-proto') || 'http';
+  const host = req.get('x-forwarded-host') || req.get('host') || 'localhost';
+  const ticketUrl = `${protocol}://${host}${process.env.BASE_PATH || ''}/ticket/${booking.id}`;
+  
   const qrCodeDataUrl = await QRCode.toDataURL(ticketUrl, {
     width: 400,
     margin: 2,
