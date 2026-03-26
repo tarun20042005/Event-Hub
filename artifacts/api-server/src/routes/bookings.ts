@@ -194,17 +194,10 @@ router.post("/", async (req: Request, res: Response) => {
 
 /**
  * GET /api/bookings/:bookingId
- * Get a specific booking's details
+ * Get a specific booking's details (public - for QR code scanning)
+ * Anyone can view a ticket if they have the booking ID
  */
 router.get("/:bookingId", async (req: Request, res: Response) => {
-  const userId = (req.session as any).userId;
-  const role = (req.session as any).role;
-
-  if (!userId) {
-    res.status(401).json({ error: "Not authenticated" });
-    return;
-  }
-
   const bookingId = parseInt(req.params.bookingId);
   if (isNaN(bookingId)) {
     res.status(400).json({ error: "Invalid booking ID" });
@@ -217,19 +210,8 @@ router.get("/:bookingId", async (req: Request, res: Response) => {
     return;
   }
 
-  if (role === "attendee" && booking.userId !== userId) {
-    res.status(403).json({ error: "Access denied" });
-    return;
-  }
-
-  if (role === "organizer") {
-    const [event] = await db.select().from(eventsTable).where(eq(eventsTable.id, booking.eventId)).limit(1);
-    if (!event || event.organizerId !== userId) {
-      res.status(403).json({ error: "Access denied" });
-      return;
-    }
-  }
-
+  // Public endpoint - anyone can view a ticket with the booking ID
+  // This allows QR code scanning to work for unauthenticated users
   res.json(await formatBooking(booking));
 });
 
