@@ -302,4 +302,44 @@ router.post("/:bookingId/scan", async (req: Request, res: Response) => {
   res.json(await formatBooking(updated));
 });
 
+/**
+ * DELETE /api/bookings/:bookingId
+ * Cancel/delete a booking (attendee only)
+ */
+router.delete("/:bookingId", async (req: Request, res: Response) => {
+  const userId = (req.session as any).userId;
+  const role = (req.session as any).role;
+
+  if (!userId) {
+    res.status(401).json({ error: "Not authenticated" });
+    return;
+  }
+  if (role !== "attendee") {
+    res.status(403).json({ error: "Only attendees can cancel bookings" });
+    return;
+  }
+
+  const bookingId = parseInt(req.params.bookingId);
+  if (isNaN(bookingId)) {
+    res.status(400).json({ error: "Invalid booking ID" });
+    return;
+  }
+
+  const [booking] = await db.select().from(bookingsTable)
+    .where(eq(bookingsTable.id, bookingId)).limit(1);
+
+  if (!booking) {
+    res.status(404).json({ error: "Booking not found" });
+    return;
+  }
+
+  if (booking.userId !== userId) {
+    res.status(403).json({ error: "Cannot delete another user's booking" });
+    return;
+  }
+
+  await db.delete(bookingsTable).where(eq(bookingsTable.id, bookingId));
+  res.json({ success: true, message: "Booking cancelled successfully" });
+});
+
 export default router;

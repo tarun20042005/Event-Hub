@@ -3,13 +3,17 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { formatCurrency } from "@/lib/utils";
-import { Ticket, MapPin, Calendar, Clock, CheckCircle2, AlertCircle, Loader2, Users } from "lucide-react";
+import { Ticket, MapPin, Calendar, Clock, CheckCircle2, AlertCircle, Loader2, Users, Trash2 } from "lucide-react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function MyBookings() {
   const [_, setLocation] = useLocation();
+  const queryClient = useQueryClient();
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const { data: user, isLoading: userLoading } = useGetCurrentUser({ query: { retry: false } });
   const { data: bookings, isLoading } = useListMyBookings();
 
@@ -18,6 +22,29 @@ export default function MyBookings() {
       setLocation("/");
     }
   }, [user, userLoading, setLocation]);
+
+  const handleDeleteBooking = async (bookingId: number) => {
+    if (!confirm("Are you sure you want to cancel this booking? This action cannot be undone.")) {
+      return;
+    }
+    
+    setDeletingId(bookingId);
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        toast({ title: "Booking cancelled successfully" });
+        queryClient.invalidateQueries({ queryKey: ["/api/bookings"] });
+      } else {
+        toast({ title: "Failed to cancel booking", variant: "destructive" });
+      }
+    } catch (err) {
+      toast({ title: "Error cancelling booking", variant: "destructive" });
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   if (!userLoading && (!user || user.role !== "attendee")) {
     return null;
@@ -101,12 +128,21 @@ export default function MyBookings() {
                 <p className="text-xs font-mono text-muted-foreground mb-4">ID: #{booking.id.toString().padStart(6, '0')}</p>
                 
                 {booking.paymentStatus === 'Pending' && (
-                  <div className="mt-auto bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg border border-amber-200 dark:border-amber-800">
+                  <div className="mt-auto bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg border border-amber-200 dark:border-amber-800 mb-4">
                     <p className="text-xs text-center text-amber-800 dark:text-amber-400 font-medium leading-relaxed">
                       Please pay {formatCurrency(booking.totalPrice)} at the event venue counter using this QR code and collect your physical ticket.
                     </p>
                   </div>
                 )}
+                
+                {/* Delete Button */}
+                <button
+                  onClick={() => handleDeleteBooking(booking.id)}
+                  disabled={deletingId === booking.id}
+                  className="w-full py-2 px-3 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 text-xs font-semibold rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {deletingId === booking.id ? 'Cancelling...' : 'Cancel Booking'}
+                </button>
               </div>
               
               {/* Cutouts for ticket effect */}

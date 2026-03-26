@@ -104,19 +104,20 @@ export default function TicketPage() {
           </Button>
         </div>
 
-        {/* Ticket Card */}
-        <div className="bg-white dark:bg-zinc-950 rounded-3xl shadow-2xl overflow-hidden border border-border print:shadow-none">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-primary to-accent p-8 md:p-10">
-            <div className="flex items-start justify-between gap-4 mb-4">
+        {/* Ticket Card - Professional Document Style */}
+        <div className="bg-white dark:bg-zinc-950 rounded-2xl shadow-2xl overflow-hidden border-4 border-primary/30 print:shadow-none print:border-primary/50">
+          {/* Header - Professional Document Style */}
+          <div className="bg-gradient-to-br from-primary via-primary to-accent p-10 md:p-12 text-white">
+            <div className="flex items-start justify-between gap-4 mb-6">
               <div>
-                <p className="text-white/80 text-sm font-medium">Booking ID</p>
-                <p className="text-white text-2xl font-bold font-mono">#{booking.id.toString().padStart(6, '0')}</p>
+                <p className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-2">Event Ticket</p>
+                <p className="text-white/80 text-sm mb-1">Booking Reference</p>
+                <p className="text-white text-3xl font-bold font-mono">#{booking.id.toString().padStart(6, '0')}</p>
               </div>
-              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm ${
+              <div className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-bold text-sm backdrop-blur-sm ${
                 booking.paymentStatus === 'Paid'
-                  ? 'bg-green-500/20 text-green-100'
-                  : 'bg-amber-500/20 text-amber-100'
+                  ? 'bg-green-500/30 text-green-100 border border-green-400/50'
+                  : 'bg-amber-500/30 text-amber-100 border border-amber-400/50'
               }`}>
                 {booking.paymentStatus === 'Paid' ? (
                   <CheckCircle2 className="w-4 h-4" />
@@ -126,7 +127,7 @@ export default function TicketPage() {
                 {booking.paymentStatus}
               </div>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white">
+            <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight">
               {booking.event.title}
             </h1>
           </div>
