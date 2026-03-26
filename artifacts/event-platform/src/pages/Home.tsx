@@ -66,30 +66,40 @@ export default function Home() {
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-10">
+      <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Upcoming Events</h2>
-          <p className="text-muted-foreground mt-2">Find and book your next unforgettable experience.</p>
+          <p className="text-sm font-semibold text-primary mb-2 uppercase tracking-wide">Explore & Book</p>
+          <h2 className="text-4xl font-bold tracking-tight">Upcoming Events</h2>
+          <p className="text-muted-foreground mt-3 text-base">Discover amazing events happening near you. Book your tickets and get instant QR codes.</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row w-full md:w-auto gap-3">
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+        <div className="flex flex-col sm:flex-row w-full md:w-auto gap-2">
+          <div className="relative flex-1 sm:flex-none sm:w-72">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input 
-              placeholder="Search events..." 
-              className="pl-10 h-12"
+              placeholder="Search by event name, location..." 
+              className="pl-12 h-12 text-sm rounded-xl"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="relative w-full sm:w-48">
+          <div className="relative flex-1 sm:flex-none sm:w-56">
+            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
             <Input 
               type="date" 
-              className="h-12"
+              className="pl-12 h-12 text-sm rounded-xl"
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
           </div>
+          {(search || date) && (
+            <button
+              onClick={() => { setSearch(""); setDate(""); }}
+              className="h-12 px-4 text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl transition-colors"
+            >
+              Clear
+            </button>
+          )}
         </div>
       </div>
 
@@ -100,13 +110,17 @@ export default function Home() {
           ))}
         </div>
       ) : events?.length === 0 ? (
-        <div className="text-center py-20 glass-card rounded-3xl">
-          <Calendar className="w-16 h-16 text-muted-foreground mx-auto mb-4 opacity-50" />
-          <h3 className="text-xl font-bold">No events found</h3>
-          <p className="text-muted-foreground mt-2">Try adjusting your search filters.</p>
+        <div className="text-center py-24 rounded-3xl border-2 border-dashed border-border">
+          <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
+            <Calendar className="w-10 h-10 text-primary opacity-60" />
+          </div>
+          <h3 className="text-2xl font-bold mb-2">No Events Found</h3>
+          <p className="text-muted-foreground mb-8 max-w-sm mx-auto">
+            {search || date ? 'No events match your filters. Try adjusting your search.' : 'Check back soon for upcoming events!'}
+          </p>
           {(search || date) && (
-            <Button variant="outline" className="mt-6" onClick={() => { setSearch(""); setDate(""); }}>
-              Clear Filters
+            <Button onClick={() => { setSearch(""); setDate(""); }}>
+              Clear Filters & Show All
             </Button>
           )}
         </div>
