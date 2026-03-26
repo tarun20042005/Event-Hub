@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import EventDetails from "./pages/EventDetails";
+import Ticket from "./pages/Ticket";
 import MyBookings from "./pages/attendee/MyBookings";
 import Dashboard from "./pages/organizer/Dashboard";
 import EventForm from "./pages/organizer/EventForm";
@@ -31,6 +32,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/events" component={Home} />
       <Route path="/events/:id" component={EventDetails} />
+      <Route path="/ticket/:id" component={Ticket} />
       
       {/* Auth */}
       <Route path="/login" component={Login} />

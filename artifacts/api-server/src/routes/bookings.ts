@@ -171,7 +171,9 @@ router.post("/", async (req: Request, res: Response) => {
     totalPrice,
   });
 
-  const qrCodeDataUrl = await QRCode.toDataURL(qrText, {
+  // Generate QR code that links to the ticket page
+  const ticketUrl = `/ticket/${booking.id}`;
+  const qrCodeDataUrl = await QRCode.toDataURL(ticketUrl, {
     width: 400,
     margin: 2,
     errorCorrectionLevel: "M",
