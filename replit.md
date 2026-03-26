@@ -91,5 +91,20 @@ Every package extends `tsconfig.base.json` which sets `composite: true`. Always 
 ## Package Notes
 
 - `pnpm run typecheck` — full typecheck
-- `pnpm --filter @workspace/db run push` — push schema changes
+- `pnpm run db:push` — push schema changes to database
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API client from openapi.yaml
+
+## Local Development (VS Code)
+
+1. Copy `.env.example` to `.env` and fill in your `DATABASE_URL` from Neon
+2. Run `pnpm install` to install all dependencies
+3. Run `pnpm dev` to start both servers concurrently:
+   - API server → http://localhost:8080
+   - Frontend → http://localhost:5173
+4. Use VS Code tasks (`Ctrl+Shift+B`) to start individual servers
+
+### Required Environment Variables
+- `DATABASE_URL` — Neon PostgreSQL connection string
+- `PORT` — set automatically by `pnpm dev` (8080 for API, 5173 for frontend)
+- `BASE_PATH` — set to `/` automatically by `pnpm dev`
+- `SESSION_SECRET` — optional, defaults to a dev value

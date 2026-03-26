@@ -1,0 +1,48 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start API Server",
+      "type": "shell",
+      "command": "pnpm --filter @workspace/api-server run dev",
+      "options": {
+        "env": {
+          "PORT": "8080",
+          "NODE_ENV": "development"
+        }
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "devServers",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Start Frontend",
+      "type": "shell",
+      "command": "pnpm --filter @workspace/event-platform run dev",
+      "options": {
+        "env": {
+          "PORT": "5173",
+          "BASE_PATH": "/"
+        }
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "devServers",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Start Dev (All)",
+      "dependsOn": ["Start API Server", "Start Frontend"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}
