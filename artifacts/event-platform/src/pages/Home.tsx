@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
 import { format } from "date-fns";
 import { formatCurrency } from "@/lib/utils";
-import { Calendar, MapPin, Search, Ticket, Users, ArrowRight } from "lucide-react";
+import { Calendar, MapPin, Search, Ticket, Users, ArrowRight, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
@@ -111,56 +111,64 @@ export default function Home() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events?.map((event, i) => (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
+              transition={{ delay: i * 0.08 }}
               key={event.id}
             >
               <Link href={`/events/${event.id}`}>
-                <div className="group h-full glass-card hover:bg-card rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 border border-border/50 hover:border-primary/20 flex flex-col">
-                  {/* Decorative placeholder image area */}
-                  {event.imageUrl ? (
-                    <div className="h-48 relative overflow-hidden flex-shrink-0">
-                      <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover rounded-t-xl" />
-                      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-primary shadow-sm">
-                        {event.price > 0 ? formatCurrency(event.price) : 'Free'}
+                <div className="group h-full rounded-3xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-primary/15 hover:-translate-y-2 border border-border/50 hover:border-primary/30 flex flex-col bg-background">
+                  {/* Image Section */}
+                  <div className="relative overflow-hidden flex-shrink-0 bg-gradient-to-br from-primary/5 to-accent/5">
+                    {event.imageUrl ? (
+                      <img 
+                        src={event.imageUrl} 
+                        alt={event.title} 
+                        className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-56 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
+                        <Ticket className="w-20 h-20 text-primary/30" />
                       </div>
+                    )}
+                    {/* Price Badge */}
+                    <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-bold text-primary shadow-lg">
+                      {event.price > 0 ? formatCurrency(event.price) : 'Free'}
                     </div>
-                  ) : (
-                    <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 relative overflow-hidden flex-shrink-0">
-                      {/* Abstract placeholder elements */}
-                      <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20">
-                        <Ticket className="w-24 h-24 transform -rotate-12" />
-                      </div>
-                      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-primary shadow-sm">
-                        {event.price > 0 ? formatCurrency(event.price) : 'Free'}
-                      </div>
-                    </div>
-                  )}
+                  </div>
                   
+                  {/* Content Section */}
                   <div className="p-6 flex flex-col flex-1">
-                    <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                    <h3 className="text-lg font-bold mb-4 group-hover:text-primary transition-colors line-clamp-2">
                       {event.title}
                     </h3>
                     
-                    <div className="space-y-2.5 mt-auto text-sm text-muted-foreground">
-                      <div className="flex items-center">
-                        <Calendar className="w-4 h-4 mr-2.5 text-primary" />
-                        <span>{format(new Date(event.date), 'EEEE, MMMM do, yyyy')} • {event.time}</span>
+                    <div className="space-y-3 text-sm text-muted-foreground mb-5">
+                      <div className="flex items-center gap-3">
+                        <Calendar className="w-4 h-4 text-primary shrink-0" />
+                        <span className="text-sm">{format(new Date(event.date), 'MMM do, yyyy')}</span>
                       </div>
-                      <div className="flex items-start">
-                        <MapPin className="w-4 h-4 mr-2.5 text-primary mt-0.5 shrink-0" />
-                        <span className="line-clamp-1">{event.location}</span>
+                      <div className="flex items-center gap-3">
+                        <Clock className="w-4 h-4 text-primary shrink-0" />
+                        <span className="text-sm">{event.time}</span>
                       </div>
-                      <div className="flex items-center">
-                        <Users className="w-4 h-4 mr-2.5 text-primary" />
-                        <span>By {event.organizerName}</span>
+                      <div className="flex items-start gap-3">
+                        <MapPin className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                        <span className="text-sm line-clamp-1">{event.location}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Users className="w-4 h-4 text-primary shrink-0" />
+                        <span className="text-sm">{event.organizerName}</span>
                       </div>
                     </div>
+
+                    {/* CTA Button */}
+                    <button className="mt-auto w-full py-3 px-4 bg-primary/8 hover:bg-primary/15 text-primary font-semibold rounded-xl transition-colors">
+                      View Event
+                    </button>
                   </div>
                 </div>
               </Link>
