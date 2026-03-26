@@ -1,0 +1,57 @@
+Microsoft Windows [Version 10.0.26200.8037]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\TARUN\vishanth project\Event-Hub># 1. Install dependencies
+'#' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\TARUN\vishanth project\Event-Hub>pnpm install
+Scope: all 9 workspace projects
+Lockfile is up to date, resolution step is skipped
+Packages: +557
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 557, reused 554, downloaded 3, added 557, done
+
+devDependencies:
++ concurrently 9.2.1
++ cross-env 7.0.3
++ dotenv-cli 11.0.0
++ prettier 3.8.1
++ typescript 5.9.3
+
+. preinstall$ node scripts/preinstall.mjs
+└─ Done in 1.9s
+Done in 21.1s using pnpm v10.33.0
+
+C:\Users\TARUN\vishanth project\Event-Hub>
+C:\Users\TARUN\vishanth project\Event-Hub># 2. Start the app
+'#' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\Users\TARUN\vishanth project\Event-Hub>pnpm dev
+
+> workspace@0.0.0 dev C:\Users\TARUN\vishanth project\Event-Hub
+> node scripts/dev.mjs
+
+[dev] Loaded 3 variable(s) from .env
+[api] > @workspace/api-server@0.0.0 dev C:\Users\TARUN\vishanth project\Event-Hub\artifacts\api-server
+[api] > cross-env NODE_ENV=development pnpm run build && pnpm run start
+[web] > @workspace/event-platform@0.0.0 dev C:\Users\TARUN\vishanth project\Event-Hub\artifacts\event-platform
+[web] > vite --config vite.config.ts --host 0.0.0.0
+[api] > @workspace/api-server@0.0.0 build C:\Users\TARUN\vishanth project\Event-Hub\artifacts\api-server
+[api] > node ./build.mjs
+[web]   VITE v7.3.1  ready in 1065 ms
+[web]   ➜  Local:   http://localhost:5173/
+[web]   ➜  Network: http://10.167.136.188:5173/
+[api]   dist\index.mjs                   2.8mb
+[api]   dist\pino-worker.mjs           153.4kb
+[api]   dist\
+[api] pino-file.mjs             142.1kb
+[api]   dist\pino-pretty.mjs           114.6kb
+[api]   dist\thread-stream-worker.mjs    7.3kb
+[api]   ...and 5 more output files...
+[api] Done in 635ms
+[api] > @workspace/api-server@0.0.0 start C:\Users\TARUN\vishanth project\Event-Hub\artifacts\api-server
+[api] > node --enable-source-maps ./dist/index.mjs
+[api] [11:55:05.729] INFO (31248): Server listening
+[api]     port: 8080
