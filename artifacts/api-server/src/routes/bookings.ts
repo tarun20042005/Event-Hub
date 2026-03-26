@@ -172,10 +172,17 @@ router.post("/", async (req: Request, res: Response) => {
   });
 
   // Generate QR code that links to the ticket page
-  // Build absolute URL from request to ensure it works when scanned
-  const protocol = req.get('x-forwarded-proto') || 'http';
-  const host = req.get('x-forwarded-host') || req.get('host') || 'localhost';
-  const ticketUrl = `${protocol}://${host}${process.env.BASE_PATH || ''}/ticket/${booking.id}`;
+  // APP_URL env var allows overriding the base URL (useful for local dev where
+  // localhost won't work when scanned from a phone on the same network)
+  let ticketUrl: string;
+  if (process.env.APP_URL) {
+    const appUrl = process.env.APP_URL.replace(/\/+$/, '');
+    ticketUrl = `${appUrl}${process.env.BASE_PATH || ''}/ticket/${booking.id}`;
+  } else {
+    const protocol = req.get('x-forwarded-proto') || 'http';
+    const host = req.get('x-forwarded-host') || req.get('host') || 'localhost';
+    ticketUrl = `${protocol}://${host}${process.env.BASE_PATH || ''}/ticket/${booking.id}`;
+  }
   
   const qrCodeDataUrl = await QRCode.toDataURL(ticketUrl, {
     width: 400,
