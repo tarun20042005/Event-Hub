@@ -40,7 +40,7 @@ export default function MyBookings() {
           <Button onClick={() => setLocation("/events")}>Browse Events</Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="space-y-6">
           {bookings?.map((booking, i) => (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
