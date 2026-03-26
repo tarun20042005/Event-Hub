@@ -1,5 +1,6 @@
 import { spawn } from "child_process";
 import { existsSync, readFileSync } from "fs";
+import { networkInterfaces } from "os";
 
 // Load .env file if it exists (local development only)
 if (existsSync(".env")) {
@@ -19,6 +20,27 @@ if (existsSync(".env")) {
     }
   }
   console.log(`[dev] Loaded ${loaded} variable(s) from .env`);
+}
+
+// Auto-detect local network IP for QR codes so phones can scan them.
+// If APP_URL is already set in .env, that value is used instead.
+if (!process.env.APP_URL) {
+  const nets = networkInterfaces();
+  let localIP = null;
+  for (const ifaces of Object.values(nets)) {
+    for (const iface of ifaces) {
+      if (iface.family === "IPv4" && !iface.internal) {
+        localIP = iface.address;
+        break;
+      }
+    }
+    if (localIP) break;
+  }
+  if (localIP) {
+    process.env.APP_URL = `http://${localIP}:5173`;
+    console.log(`[dev] Auto-detected APP_URL: ${process.env.APP_URL}`);
+    console.log(`[dev] QR codes will use this address so phones on the same WiFi can scan them.`);
+  }
 }
 
 const isWindows = process.platform === "win32";
