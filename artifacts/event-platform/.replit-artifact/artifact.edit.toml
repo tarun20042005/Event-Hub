@@ -1,0 +1,27 @@
+kind = "web"
+  previewPath = "/"
+  title = "EventFlow"
+  version = "1.0.0"
+
+  [[services]]
+  localPort = 19579
+  name = "web"
+  paths = ["/"]
+
+  [services.env]
+  PORT = "19579"
+  BASE_PATH = "/"
+
+  [services.development]
+  run = "pnpm --filter @workspace/event-platform run dev"
+
+  [services.production]
+  serve = "static"
+
+  [services.production.build]
+  args = ["pnpm", "--filter", "@workspace/event-platform", "run", "build"]
+
+  [services.production.build.env]
+  NODE_ENV = "production"
+  BASE_PATH = "/"
+  
