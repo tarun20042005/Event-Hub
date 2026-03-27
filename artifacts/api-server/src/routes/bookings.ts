@@ -171,19 +171,21 @@ router.post("/", async (req: Request, res: Response) => {
     totalPrice,
   });
 
-  // Generate QR code that links to the ticket page
-  // APP_URL env var allows overriding the base URL (useful for local dev where
-  // localhost won't work when scanned from a phone on the same network)
+  // Generate QR code that links to the ticket page.
+  // Priority: APP_URL env var > REPLIT_DEV_DOMAIN (auto-set by Replit) > x-forwarded-host fallback.
+  // Using REPLIT_DEV_DOMAIN ensures the URL works through Replit's proxy (no port issues).
   let ticketUrl: string;
   if (process.env.APP_URL) {
     const appUrl = process.env.APP_URL.replace(/\/+$/, '');
-    ticketUrl = `${appUrl}${process.env.BASE_PATH || ''}/ticket/${booking.id}`;
+    ticketUrl = `${appUrl}/ticket/${booking.id}`;
+  } else if (process.env.REPLIT_DEV_DOMAIN) {
+    ticketUrl = `https://${process.env.REPLIT_DEV_DOMAIN}/ticket/${booking.id}`;
   } else {
     const protocol = req.get('x-forwarded-proto') || 'http';
-    const host = req.get('x-forwarded-host') || req.get('host') || 'localhost';
-    ticketUrl = `${protocol}://${host}${process.env.BASE_PATH || ''}/ticket/${booking.id}`;
+    const host = (req.get('x-forwarded-host') || req.get('host') || 'localhost').replace(/:\d+$/, '');
+    ticketUrl = `${protocol}://${host}/ticket/${booking.id}`;
   }
-  
+
   const qrCodeDataUrl = await QRCode.toDataURL(ticketUrl, {
     width: 400,
     margin: 2,
